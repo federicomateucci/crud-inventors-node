@@ -32,15 +32,20 @@ router.post('/', async (req, res) => {
 
 //PUT modificacion de un inventor
 
-router.put('/:id', (req, res) => {
-    res.send(`Modificacion del inventor = ${req.params.id}`)
+router.put('/:id', async (req, res) => {
+    let inventor = req.body;
+    inventor._id = req.params.id;
+    await datainventors.updateInventor(inventor);
 
+    res.json(await datainventors.getAllInventors(req.params.id));
 });
 
 // DELETE elimina un inventor
 
-router.delete('/:id', (req, res) => {
-    res.send(`Elimina un inventor ${req.params.id}`)
+router.delete('/:id', async (req, res) => {
+    let id = req.params.id;
+    await datainventors.deleteInventor(id);
+    res.send(`Se elimino el inventor con el id ${id} `)
 });
 
 module.exports = router;

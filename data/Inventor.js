@@ -24,9 +24,9 @@ async function getAllInventors() {
 }
 
 async function getInventor(name) {
-let data = await readMocInventor()
-let inventor = data.inventors.find(inv=> inv.first.toLowerCase() == name.toLowerCase())
-return inventor
+    let data = await readMocInventor()
+    let inventor = data.inventors.find(inv => inv.first.toLowerCase() == name.toLowerCase())
+    return inventor
 }
 
 async function createInventor(inventor) {
@@ -37,19 +37,23 @@ async function createInventor(inventor) {
 }
 
 async function updateInventor(inventor) {
-const data = await getAllInventors();
-const indexInventor = data.inventors.findeIndex(inv._id == inventor._id);
-data.inventors[indexInventor]._id = inventor._id;
-data.inventors[indexInventor].first = inventor.first;
-data.iventors[indexInventor].last = inventor.last;
-data.inventor[indexInventor].year = inventor.year;
-data.inventor[indexInventor].img = inventors.img;
+    let data = await getAllInventors();
+    const indexInventor = data.inventors.findIndex(inv => inv._id == inventor._id);
+    data.inventors[indexInventor]._id = inventor._id;
+    data.inventors[indexInventor].first = inventor.first;
+    data.inventors[indexInventor].last = inventor.last;
+    data.inventors[indexInventor].year = inventor.year;
+    data.inventors[indexInventor].img = inventor.img;
 
-await writeMocInventor(data);
+    await writeMocInventor(data);
 }
 
-function deleteInventor(id) {
-    
+
+async function deleteInventor(id) {
+    let data = await getAllInventors();
+    data.inventors.splice(data.inventors.findIndex(inv => inv._id == id), 1);
+    await writeMocInventor(data);
+
 
 }
 
