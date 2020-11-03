@@ -69,6 +69,13 @@
    "last": "Antonini",
    "year": 1989,
    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Albert_Einstein_Head.jpg/220px-Albert_Einstein_Head.jpg"
+  },
+  {
+   "_id": 12,
+   "first": "Isabella",
+   "last": "Corra",
+   "year": 1900,
+   "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Albert_Einstein_Head.jpg/220px-Albert_Einstein_Head.jpg"
   }
  ]
 }
