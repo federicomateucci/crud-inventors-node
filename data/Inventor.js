@@ -1,6 +1,8 @@
 
 
 const fs = require('fs').promises
+const conectionMongoDb = require('./conectionMongoDb')
+const mongoDb = require('./conectionMongoDb')
 
 const PATH = __dirname + '/inventorsMOC.json'
 
@@ -19,40 +21,63 @@ async function writeMocInventor(inventors) {
 
 
 async function getAllInventors() {
-    return await readMocInventor();
+    const mongoConnection = await mongoDb.getConnectionToMongoDb()
+    const allInventors = await mongoConnection.db('ortnodetp2').collection('inventors').find().toArray();
+    return allInventors;
 
 }
 
-async function getInventor(name) {
-    let data = await readMocInventor()
-    let inventor = data.inventors.find(inv => inv.first.toLowerCase() == name.toLowerCase())
+async function getInventor(id) {
+
+    const mongoConnection = await mongoDb.getConnectionToMongoDb()
+
+    const inventor = mongoConnection.db('ortnodetp2').collection('inventors').findOne({ "_id": parseInt(id) })
+
+
     return inventor
 }
 
 async function createInventor(inventor) {
-    const data = await getAllInventors();
-    data.inventors.push(inventor);
-    await writeMocInventor(data);
 
+    const mongoConnection = await mongoDb.getConnectionToMongoDb();
+    const result = await mongoConnection.db('ortnodetp2').collection('inventors').insertOne(inventor);
+    return result
 }
 
 async function updateInventor(inventor) {
-    let data = await getAllInventors();
-    const indexInventor = data.inventors.findIndex(inv => inv._id == inventor._id);
-    data.inventors[indexInventor]._id = inventor._id;
-    data.inventors[indexInventor].first = inventor.first;
-    data.inventors[indexInventor].last = inventor.last;
-    data.inventors[indexInventor].year = inventor.year;
-    data.inventors[indexInventor].img = inventor.img;
 
-    await writeMocInventor(data);
+    const mongoConnection = await mongoDb.getConnectionToMongoDb();
+    const query = { _id: parseInt(inventor._id) };
+    const newValues = {
+        $set: {
+            first: inventor.first,
+            last: inventor.last,
+            year: inventor.year,
+            img: inventor.img
+        }
+    }
+
+    let result = await mongoConnection.db('ortnodetp2').collection('inventors').updateOne(query, newValues);
+    return result
+
+
 }
 
 
 async function deleteInventor(id) {
-    let data = await getAllInventors();
-    data.inventors.splice(data.inventors.findIndex(inv => inv._id == id), 1);
-    await writeMocInventor(data);
+    try {
+
+        const mongoConnection = await mongoDb.getConnectionToMongoDb();
+        let result = await mongoConnection.db('ortnodetp2').collection('inventors').deleteOne({ _id: parseInt(id) })
+
+        let data = await getAllInventors();
+        console.log(data);
+        return result;
+    } catch (err) {
+        throw new Error(err)
+    }
+
+
 
 
 }
