@@ -1,6 +1,6 @@
 let express = require('express');
 let router = express.Router();
-let virusStats = require('../data/virus')
+
 
 
 /* GET home page. */
